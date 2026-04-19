@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ShoppingBag, Heart, Star, Minus, Plus, ArrowLeft } from 'lucide-react';
+import { Star, ArrowLeft, ArrowRight } from 'lucide-react';
 import { products } from '../data/products';
 
 const ProductPage = () => {
   const { categorySlug } = useParams();
-  const [qty, setQty] = useState({});
 
   // Filter products based on the slug or show all if categorySlug is 'all'
   const filteredProducts = categorySlug === 'all-products' || !categorySlug
@@ -17,11 +16,6 @@ const ProductPage = () => {
   const categoryName = categorySlug === 'all-products' || !categorySlug
     ? 'All Products'
     : (filteredProducts.length > 0 ? filteredProducts[0].category : 'Products');
-
-  const handleQtyChange = (id, value) => {
-    if (value < 1) return;
-    setQty({ ...qty, [id]: value });
-  };
 
   const renderStars = (rating) => {
     return (
@@ -107,7 +101,7 @@ const ProductPage = () => {
                   </div>
 
                   {/* Price */}
-                  <div className="mb-4">
+                  <div className="mb-6">
                     <div className="flex items-center gap-3">
                       <span className="text-2xl font-bold text-accent">
                         ₹{product.price.toLocaleString()}
@@ -116,62 +110,15 @@ const ProductPage = () => {
                         ₹{product.originalPrice.toLocaleString()}
                       </span>
                     </div>
-                    <span className="text-xs text-accent font-bold">
-                      Save ₹{(product.originalPrice - product.price).toLocaleString()}
-                    </span>
                   </div>
 
-                  {/* Quantity Control */}
-                  <div className="mb-4">
-                    <label className="text-sm font-semibold text-gray-700 block mb-2">
-                      Quantity
-                    </label>
-                    <div className="flex items-center border border-gray-300 rounded-lg w-fit">
-                      <button
-                        onClick={() =>
-                          handleQtyChange(
-                            product.id,
-                            (qty[product.id] || 1) - 1
-                          )
-                        }
-                        className="p-2 hover:bg-gray-100 transition"
-                      >
-                        <Minus className="w-4 h-4" />
-                      </button>
-                      <span className="px-4 py-2 font-semibold">
-                        {qty[product.id] || 1}
-                      </span>
-                      <button
-                        onClick={() =>
-                          handleQtyChange(
-                            product.id,
-                            (qty[product.id] || 1) + 1
-                          )
-                        }
-                        className="p-2 hover:bg-gray-100 transition"
-                      >
-                        <Plus className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Action Buttons */}
-                  <div className="flex gap-3">
+                  {/* Action Button */}
+                  <div className="mt-auto">
                     <button
-                      disabled={!product.inStock}
-                      className="flex-1 bg-accent text-white font-bold py-3 rounded-lg hover:bg-accent/90 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                      className="w-full bg-primary text-white font-bold py-4 rounded-xl hover:bg-accent transition-all duration-300 flex items-center justify-center gap-2 group/btn"
                     >
-                      <ShoppingBag className="w-5 h-5" />
-                      Add to Cart
-                    </button>
-                    <button
-                      disabled={!product.inStock}
-                      className="flex-1 bg-primary text-white font-bold py-3 rounded-lg hover:bg-primary/90 transition disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      Buy Now
-                    </button>
-                    <button className="p-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition">
-                      <Heart className="w-5 h-5 text-accent" />
+                      View Details
+                      <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
                     </button>
                   </div>
                 </div>

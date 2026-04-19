@@ -198,47 +198,51 @@ const Navbar = () => {
 
       {/* Mobile Menu Overlay */}
       <div
-        className={`fixed inset-0 bg-primary z-[60] flex flex-col items-center justify-center gap-6 transition-transform duration-500 overflow-y-auto pt-20 ${
-          isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+        className={`fixed inset-0 bg-primary/95 backdrop-blur-2xl z-[60] flex flex-col items-center justify-center p-6 transition-all duration-500 ${
+          isMobileMenuOpen ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'
         } lg:hidden`}
       >
         <button 
-          className="absolute top-8 right-8 text-white p-2"
+          className="absolute top-8 right-8 text-white p-2 hover:text-accent transition-colors"
           onClick={() => setIsMobileMenuOpen(false)}
         >
           <X className="w-8 h-8" />
         </button>
         
-        {navLinks.map((link) => (
-          <div key={link.name} className="w-full text-center">
-            {renderNavLink(link, true)}
-            
-            {link.dropdown && (
-              <div className="flex flex-col gap-4 mt-4 bg-white/5 py-4">
-                {link.dropdown.map((sub) => (
-                  <RouterLink
-                    key={sub.name}
-                    to={sub.to}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="text-gray-300 text-lg hover:text-accent transition-colors"
-                  >
-                    {sub.name}
-                  </RouterLink>
-                ))}
+        <div className="w-full flex flex-col gap-4 overflow-y-auto max-h-[80vh] py-10 px-4">
+          {navLinks.map((link) => (
+            <div key={link.name} className="w-full">
+              <div className="relative inline-block w-full">
+                {renderNavLink(link, true)}
               </div>
-            )}
-          </div>
-        ))}
-        
-        <div className="flex gap-8 mt-10">
-          {actionIcons.map((action, i) => (
-            <button key={i} className="text-white flex flex-col items-center gap-1 group">
-              <div className="p-4 rounded-full border border-white/20 group-hover:border-accent group-hover:text-accent transition-all">
-                {action.icon}
-              </div>
-              <span className="text-xs uppercase tracking-widest opacity-60 group-hover:opacity-100 transition-opacity">{action.label}</span>
-            </button>
+              
+              {link.dropdown && (
+                <div className="grid grid-cols-2 gap-3 mt-4 mb-6 bg-white/5 p-4 rounded-2xl">
+                  {link.dropdown.map((sub) => (
+                    <RouterLink
+                      key={sub.name}
+                      to={sub.to}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="text-gray-300 text-sm py-2 hover:text-accent transition-colors border-b border-white/5"
+                    >
+                      {sub.name}
+                    </RouterLink>
+                  ))}
+                </div>
+              )}
+            </div>
           ))}
+          
+          <div className="flex justify-center gap-6 mt-10 pt-10 border-t border-white/10">
+            {actionIcons.map((action, i) => (
+              <button key={i} className="text-white flex flex-col items-center gap-2 group">
+                <div className="w-12 h-12 flex items-center justify-center rounded-2xl bg-white/10 border border-white/10 group-hover:border-accent group-hover:bg-accent/10 group-hover:text-accent transition-all">
+                  {action.icon}
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-widest opacity-40 group-hover:opacity-100">{action.label}</span>
+              </button>
+            ))}
+          </div>
         </div>
       </div>
     </nav>

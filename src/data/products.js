@@ -1,0 +1,80 @@
+export const products = [
+  {
+    id: 1,
+    name: "Commercial Solar Geyser",
+    category: "Solar Geyser",
+    slug: "solar-geyser",
+    price: 45000,
+    originalPrice: 55000,
+    rating: 4.8,
+    reviews: 234,
+    image: "/products/geyser.png",
+    inStock: true,
+    description: "High-efficiency commercial grade solar water heating system designed for extreme performance and durability."
+  },
+  {
+    id: 2,
+    name: "Monocrystalline Solar Panel",
+    category: "Solar Panel",
+    slug: "solar-panel",
+    price: 25000,
+    originalPrice: 32000,
+    rating: 4.9,
+    reviews: 456,
+    image: "/products/panel.png",
+    inStock: true,
+    description: "Premium monocrystalline solar panels with the highest conversion efficiency for residential and commercial roofs."
+  },
+  {
+    id: 3,
+    name: "Industrial Solar Plant",
+    category: "Solar Plant",
+    slug: "solar-plant",
+    price: 2500000,
+    originalPrice: 3000000,
+    rating: 4.7,
+    reviews: 142,
+    image: "/products/solar-plant.png",
+    inStock: true,
+    description: "Scaleable megawatt-level solar power plants for industrial complexes and utility-scale energy production."
+  },
+  {
+    id: 4,
+    name: "Lithium Storage Battery",
+    category: "Battery Systems",
+    slug: "battery-systems",
+    price: 180000,
+    originalPrice: 220000,
+    rating: 4.6,
+    reviews: 189,
+    image: "/products/battery.png",
+    inStock: true,
+    description: "Next-generation lithium iron phosphate batteries for reliable backup and energy storage."
+  },
+  {
+    id: 5,
+    name: "Hybrid Energy Systems",
+    category: "Energy Systems",
+    slug: "energy-systems",
+    price: 350000,
+    originalPrice: 420000,
+    rating: 4.8,
+    reviews: 321,
+    image: "/products/hybrid-system.png",
+    inStock: true,
+    description: "Integrated hybrid systems combining solar, wind, and battery storage for 24/7 energy independence."
+  },
+  {
+    id: 6,
+    name: "Zero Discharge Plant",
+    category: "Water Treatment",
+    slug: "water-treatment",
+    price: 150000,
+    originalPrice: 185000,
+    rating: 4.5,
+    reviews: 98,
+    image: "/products/water-treatment.png",
+    inStock: false,
+    description: "Advanced water treatment systems designed for zero liquid discharge compliance and resource recovery."
+  }
+];

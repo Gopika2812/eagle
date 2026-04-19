@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cinzel+Decorative:wght@400;700&display=swap" rel="stylesheet">
+    <title>Eagle Envitech | Sustainable Solar & Environmental Solutions</title>
+    <meta name="description" content="Eagle Envitech provides premium solar energy systems, water treatment plants, and environmental consultancy inspired by global sustainability standards." />
+    <!-- Primary Meta Tags -->
+    <meta name="title" content="Eagle Envitech | Sustainable Solar & Environmental Solutions" />
+    <meta name="theme-color" content="#102b4e" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+    <!-- Tailwind CSS CDN for quick styling during dev (I'm using vanilla CSS in index.css but some tailwind classes are used in components for rapid layout) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: '#102b4e',
+              accent: '#e21e26',
+              'accent-light': '#ff4d4d',
+              'bg-light': '#f8f9fa',
+            }
+          }
+        }
+      }
+    </script>
+  </body>
+</html>

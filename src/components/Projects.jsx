@@ -1,33 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
+import { projectsData } from '../data/projectsData';
 
 const Projects = () => {
-  const projects = [
-    {
-      title: "100kW Industrial Solar Plant",
-      client: "Textile Mills Corp",
-      location: "Tirunelveli, TN",
-      image: "https://images.unsplash.com/photo-1548337138-e87d889cc369?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
-    },
-    {
-      title: "Water Filtration System",
-      client: "City Housing Society",
-      location: "Madurai, TN",
-      image: "https://images.unsplash.com/photo-1581244277943-fe4a9c777189?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
-    },
-    {
-      title: "Solar Street Lighting Grid",
-      client: "Municipal Corporation",
-      location: "Kanyakumari, TN",
-      image: "/projects/street-lights.png"
-    },
-    {
-      title: "Residential Off-Grid Power",
-      client: "Private Estate",
-      location: "Tenkasi, TN",
-      image: "/projects/residential-solar.png"
-    }
-  ];
+  // Take one project from each category or just the first 4 featured
+  const displayProjects = projectsData.slice(0, 4);
 
   return (
     <section id="projects" className="bg-white">
@@ -37,11 +15,11 @@ const Projects = () => {
             <h4 className="text-accent font-bold uppercase tracking-widest text-sm mb-4">Our Portfolio</h4>
             <h2 className="text-4xl font-bold text-primary leading-tight">Featured Projects & Case Studies</h2>
           </div>
-          <button className="btn btn-primary">View All Projects</button>
+          <Link to="/projects" className="btn btn-primary">View All Projects</Link>
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {projects.map((p, i) => (
+          {displayProjects.map((p, i) => (
             <motion.div
               key={i}
               initial={{ opacity: 0, scale: 0.95 }}
@@ -54,6 +32,10 @@ const Projects = () => {
                 src={p.image} 
                 alt={p.title} 
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = "https://images.unsplash.com/photo-1509391366360-2e959784a276?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"; // fallback
+                }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent flex flex-col justify-end p-8 transform translate-y-4 group-hover:translate-y-0 transition-transform">
                 <p className="text-accent text-xs font-bold uppercase tracking-widest mb-2">{p.location}</p>

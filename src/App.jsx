@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Home from './pages/Home'
 import ProductPage from './pages/ProductPage'
+import ProjectsPage from './pages/ProjectsPage'
 import KnowYourVolt from './pages/KnowYourVolt'
 import Footer from './components/Footer'
 import Preloader from './components/Preloader'
@@ -27,6 +28,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/products/:categorySlug" element={<ProductPage />} />
               <Route path="/all-products" element={<ProductPage />} />
+              <Route path="/projects" element={<ProjectsPage />} />
               <Route path="/know-your-volt" element={<KnowYourVolt />} />
             </Routes>
             <Footer />

@@ -11,10 +11,10 @@ const Footer = () => {
   const renderFooterLink = (to, name) => {
     if (isHomePage) {
       return (
-        <ScrollLink 
-          to={to} 
-          smooth={true} 
-          duration={500} 
+        <ScrollLink
+          to={to}
+          smooth={true}
+          duration={500}
           offset={-80}
           className="hover:text-accent transition-colors cursor-pointer"
         >
@@ -36,16 +36,16 @@ const Footer = () => {
           <div className="lg:col-span-1">
             <div className="flex items-center mb-8">
               <RouterLink to="/">
-                <img 
-                  src="/logo.png" 
-                  alt="Eagle Envitech Logo" 
-                  className="h-10 w-auto" 
+                <img
+                  src="/logo.png"
+                  alt="Eagle Envitech Logo"
+                  className="h-10 w-auto"
                 />
               </RouterLink>
             </div>
             <p className="text-gray-400 leading-relaxed mb-6">
               51/15, Trivandrum Rd, Kattnayakan, Palayamkottai, Tirunelveli, Tamil Nadu 627002. <br />
-              Ph: +91 9677071507 | info@eagleenvitech.com
+              +91 9677071507 | 96777 14607 info@eagleenvitech.com
             </p>
           </div>
 
@@ -84,9 +84,9 @@ const Footer = () => {
             </h4>
             <p className="text-gray-400 mb-6">Stay updated with our latest green initiatives.</p>
             <div className="relative">
-              <input 
-                type="email" 
-                placeholder="Enter your email" 
+              <input
+                type="email"
+                placeholder="Enter your email"
                 className="w-full bg-white/5 border border-white/10 rounded-full py-4 px-6 focus:outline-none focus:border-accent text-white"
               />
               <button className="absolute right-2 top-2 bottom-2 bg-accent hover:bg-accent-light px-6 rounded-full font-bold transition-all">
@@ -113,7 +113,7 @@ const Footer = () => {
             <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
             <a href="#" className="hover:text-white transition-colors">Sitemap</a>
           </div>
-          <button 
+          <button
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             className="w-12 h-12 bg-accent rounded-full flex items-center justify-center hover:translate-y-[-5px] transition-all"
           >

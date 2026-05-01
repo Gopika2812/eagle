@@ -1,12 +1,23 @@
-import { ChevronDown, Heart, Menu, ShoppingBag, User, X, Phone, Mail, Clock } from 'lucide-react';
+import { ChevronDown, Heart, Menu, ShoppingBag, User, X, Phone, Mail, Clock, ChevronRight } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link as ScrollLink } from 'react-scroll';
 import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
+import { categories } from '../data/categories';
+import { projectCategories } from '../data/projectsData';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isProductsDropdownOpen, setIsProductsDropdownOpen] = useState(false);
+  const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
+  const [isProjectsMenuOpen, setIsProjectsMenuOpen] = useState(false);
+  const [activeCategory, setActiveCategory] = useState(categories[0]);
+
+  // Mobile accordion state
+  const [isMobileProductsExpanded, setIsMobileProductsExpanded] = useState(false);
+  const [isMobileProjectsExpanded, setIsMobileProjectsExpanded] = useState(false);
+  const [expandedMobileCategory, setExpandedMobileCategory] = useState(null);
+  const [expandedMobileSubcategory, setExpandedMobileSubcategory] = useState(null);
+
   const location = useLocation();
   const navigate = useNavigate();
   const isHomePage = location.pathname === '/';
@@ -21,23 +32,15 @@ const Navbar = () => {
 
   const navLinks = [
     { name: 'Home', to: 'home', type: 'scroll' },
-    { 
-      name: 'Products', 
+    {
+      name: 'Products',
       to: '/all-products',
       type: 'route',
-      dropdown: [
-        { name: 'View All Products', to: '/all-products' },
-        { name: 'Solar Geyser', to: '/products/solar-geyser' },
-        { name: 'Solar Panel', to: '/products/solar-panel' },
-        { name: 'Solar Plant', to: '/products/solar-plant' },
-        { name: 'Battery Systems', to: '/products/battery-systems' },
-        { name: 'Energy Systems', to: '/products/energy-systems' },
-        { name: 'Water Treatment', to: '/products/water-treatment' },
-      ]
+      isMegaMenu: true,
     },
     { name: 'Services', to: 'services', type: 'scroll' },
     { name: 'Know Your Volt', to: '/know-your-volt', type: 'route', badge: 'New' },
-    { name: 'Projects', to: 'projects', type: 'scroll' },
+    { name: 'Projects', to: '/projects', type: 'route', isProjectsMenu: true },
     { name: 'Contact', to: 'contact', type: 'scroll' },
   ];
 
@@ -50,11 +53,8 @@ const Navbar = () => {
   const handleNavClick = (link) => {
     if (link.type === 'scroll') {
       if (isHomePage) {
-        // If already on homepage, react-scroll will handle it if we use the component
-        // But for mobile menu close:
         setIsMobileMenuOpen(false);
       } else {
-        // If on another page, navigate to home then scroll (browser default or handled by App)
         navigate('/');
         setIsMobileMenuOpen(false);
       }
@@ -64,11 +64,10 @@ const Navbar = () => {
   };
 
   const renderNavLink = (link, mobile = false) => {
-    const commonClasses = mobile 
+    const commonClasses = mobile
       ? "text-white text-2xl font-semibold hover:text-accent transition-colors py-2 flex items-center justify-center gap-2 w-full"
-      : `text-sm font-semibold cursor-pointer transition-colors flex items-center gap-1 hover:text-accent ${
-          isScrolled || !isHomePage ? 'text-primary' : 'lg:text-white lg:hover:text-accent text-primary'
-        }`;
+      : `text-sm font-semibold cursor-pointer transition-colors flex items-center gap-1 hover:text-accent ${isScrolled || !isHomePage ? 'text-primary' : 'lg:text-white lg:hover:text-accent text-primary'
+      }`;
 
     if (link.type === 'scroll' && isHomePage) {
       return (
@@ -89,7 +88,17 @@ const Navbar = () => {
       <RouterLink
         to={link.type === 'scroll' ? '/' : link.to}
         className={commonClasses}
-        onClick={() => handleNavClick(link)}
+        onClick={(e) => {
+          if (link.isMegaMenu && mobile) {
+            e.preventDefault(); // Don't navigate on mobile, let the accordion handle it
+            setIsMobileProductsExpanded(!isMobileProductsExpanded);
+          } else if (link.isProjectsMenu && mobile) {
+            e.preventDefault();
+            setIsMobileProjectsExpanded(!isMobileProjectsExpanded);
+          } else {
+            handleNavClick(link);
+          }
+        }}
       >
         {link.name}
         {link.badge && (
@@ -97,7 +106,8 @@ const Navbar = () => {
             {link.badge}
           </span>
         )}
-        {link.dropdown && !mobile && <ChevronDown className="w-4 h-4 transition-transform group-hover:rotate-180" />}
+        {link.isMegaMenu && <ChevronDown className={`w-4 h-4 transition-transform ${mobile && isMobileProductsExpanded ? 'rotate-180' : 'group-hover:rotate-180'}`} />}
+        {link.isProjectsMenu && <ChevronDown className={`w-4 h-4 transition-transform ${mobile && isMobileProjectsExpanded ? 'rotate-180' : 'group-hover:rotate-180'}`} />}
       </RouterLink>
     );
   };
@@ -108,9 +118,9 @@ const Navbar = () => {
       <div className={`hidden md:block py-2 ${isScrolled || !isHomePage ? 'bg-primary/5 text-primary' : 'bg-primary/20 text-white'} border-b border-white/10`}>
         <div className="container flex justify-between items-center px-8 text-xs font-semibold tracking-wider">
           <div className="flex gap-8">
-            <a href="tel:+919677071507" className="flex items-center gap-2 hover:text-accent transition-colors">
+            <a href="tel:+919677071507 " className="flex items-center gap-2 hover:text-accent transition-colors">
               <Phone className="w-3.5 h-3.5 text-accent" />
-              +91 9677071507
+              +91 96770 71507 | 96777 14607
             </a>
             <a href="mailto:info@eagleenvitech.com" className="flex items-center gap-2 hover:text-accent transition-colors">
               <Mail className="w-3.5 h-3.5 text-accent" />
@@ -129,10 +139,10 @@ const Navbar = () => {
         {/* Left: Logo */}
         <div className="flex-1 lg:flex-none">
           <RouterLink to="/" className="flex items-center cursor-pointer">
-            <img 
-              src="/logo.png" 
-              alt="Eagle Envitech Logo" 
-              className="h-10 md:h-12 w-auto transition-all duration-300" 
+            <img
+              src="/logo.png"
+              alt="Eagle Envitech Logo"
+              className="h-10 md:h-12 w-auto transition-all duration-300"
             />
           </RouterLink>
         </div>
@@ -140,25 +150,112 @@ const Navbar = () => {
         {/* Center: Desktop Menu */}
         <div className="hidden lg:flex flex-1 justify-center gap-10 items-center">
           {navLinks.map((link) => (
-            <div 
-              key={link.name} 
+            <div
+              key={link.name}
               className="relative group py-2"
-              onMouseEnter={() => link.dropdown && setIsProductsDropdownOpen(true)}
-              onMouseLeave={() => link.dropdown && setIsProductsDropdownOpen(false)}
+              onMouseEnter={() => {
+                if (link.isMegaMenu) setIsMegaMenuOpen(true);
+                if (link.isProjectsMenu) setIsProjectsMenuOpen(true);
+              }}
+              onMouseLeave={() => {
+                if (link.isMegaMenu) setIsMegaMenuOpen(false);
+                if (link.isProjectsMenu) setIsProjectsMenuOpen(false);
+              }}
             >
               {renderNavLink(link)}
 
-              {/* Dropdown Menu */}
-              {link.dropdown && (
-                <div className={`absolute top-full left-1/2 -translate-x-1/2 w-64 bg-primary/95 backdrop-blur-xl border border-white/10 shadow-2xl rounded-2xl overflow-hidden py-3 transition-all duration-500 ${isProductsDropdownOpen ? 'opacity-100 visible translate-y-2' : 'opacity-0 invisible translate-y-4'}`}>
-                  {link.dropdown.map((subItem) => (
+              {/* Mega Menu Dropdown */}
+              {link.isMegaMenu && (
+                <div
+                  className={`absolute top-full left-1/2 -translate-x-1/2 w-[800px] bg-primary/95 backdrop-blur-xl border border-white/10 shadow-2xl rounded-2xl overflow-hidden transition-all duration-500 flex ${isMegaMenuOpen ? 'opacity-100 visible translate-y-2' : 'opacity-0 invisible translate-y-4'}`}
+                  onMouseEnter={() => setIsMegaMenuOpen(true)}
+                  onMouseLeave={() => setIsMegaMenuOpen(false)}
+                >
+                  {/* Left Column - Main Categories */}
+                  <div className="w-1/3 bg-white/5 border-r border-white/10 py-4">
+                    {categories.map((cat) => (
+                      <div
+                        key={cat.slug}
+                        className={`px-6 py-3 cursor-pointer text-sm font-semibold flex items-center justify-between transition-colors ${activeCategory?.slug === cat.slug ? 'bg-accent/20 text-accent border-l-4 border-accent' : 'text-gray-300 hover:bg-white/5 hover:text-white border-l-4 border-transparent'}`}
+                        onMouseEnter={() => setActiveCategory(cat)}
+                        onClick={() => {
+                          setIsMegaMenuOpen(false);
+                          navigate(`/all-products?category=${cat.slug}`);
+                        }}
+                      >
+                        {cat.name}
+                        <ChevronRight className={`w-4 h-4 ${activeCategory?.slug === cat.slug ? 'text-accent' : 'text-gray-500'}`} />
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Right Column - Subcategories & Items */}
+                  <div className="w-2/3 p-6 max-h-[400px] overflow-y-auto custom-scrollbar">
+                    <div className="mb-4 pb-2 border-b border-white/10 flex justify-between items-center">
+                      <h3 className="text-xl font-bold text-white">{activeCategory?.name}</h3>
+                      <RouterLink
+                        to={`/all-products?category=${activeCategory?.slug}`}
+                        className="text-accent text-sm hover:underline"
+                        onClick={() => setIsMegaMenuOpen(false)}
+                      >
+                        View All
+                      </RouterLink>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-6">
+                      {activeCategory?.subcategories?.map((subcat) => (
+                        <div key={subcat.slug} className="mb-4">
+                          <RouterLink
+                            to={`/all-products?category=${activeCategory.slug}&subcategory=${subcat.slug}`}
+                            className="font-bold text-accent text-sm mb-2 block hover:underline"
+                            onClick={() => setIsMegaMenuOpen(false)}
+                          >
+                            {subcat.name}
+                          </RouterLink>
+                          <ul className="space-y-2">
+                            {subcat.items?.map((item) => (
+                              <li key={item.slug}>
+                                <RouterLink
+                                  to={`/all-products?category=${activeCategory.slug}&subcategory=${subcat.slug}&item=${item.slug}`}
+                                  className="text-gray-400 text-sm hover:text-white transition-colors flex items-center gap-2 group"
+                                  onClick={() => setIsMegaMenuOpen(false)}
+                                >
+                                  <span className="w-1 h-1 rounded-full bg-gray-600 group-hover:bg-accent transition-colors"></span>
+                                  {item.name}
+                                </RouterLink>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Projects Dropdown */}
+              {link.isProjectsMenu && (
+                <div
+                  className={`absolute top-full left-1/2 -translate-x-1/2 w-[280px] bg-primary/95 backdrop-blur-xl border border-white/10 shadow-2xl rounded-2xl overflow-hidden transition-all duration-300 flex flex-col py-2 ${isProjectsMenuOpen ? 'opacity-100 visible translate-y-2' : 'opacity-0 invisible translate-y-4'}`}
+                  onMouseEnter={() => setIsProjectsMenuOpen(true)}
+                  onMouseLeave={() => setIsProjectsMenuOpen(false)}
+                >
+                  <RouterLink
+                    to="/projects"
+                    className="px-6 py-3 border-b border-white/10 text-white font-bold hover:bg-white/5 transition-colors"
+                    onClick={() => setIsProjectsMenuOpen(false)}
+                  >
+                    All Projects
+                  </RouterLink>
+                  {projectCategories.map((cat) => (
                     <RouterLink
-                      key={subItem.name}
-                      to={subItem.to}
-                      className="block px-8 py-3 text-sm font-medium text-white hover:bg-white/10 hover:text-accent transition-all cursor-pointer"
-                      onClick={() => setIsProductsDropdownOpen(false)}
+                      key={cat.slug}
+                      to={`/projects?category=${cat.slug}`}
+                      className="px-6 py-3 text-gray-300 text-sm font-semibold hover:bg-white/5 hover:text-white hover:pl-8 transition-all flex items-center justify-between group"
+                      onClick={() => setIsProjectsMenuOpen(false)}
                     >
-                      {subItem.name}
+                      {cat.name}
+                      <ChevronRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity text-accent" />
                     </RouterLink>
                   ))}
                 </div>
@@ -171,11 +268,10 @@ const Navbar = () => {
         <div className="flex-1 lg:flex-none flex items-center justify-end gap-3 md:gap-5">
           <div className="hidden md:flex gap-4 md:gap-5">
             {actionIcons.map((action, i) => (
-              <button 
-                key={i} 
-                className={`transition-colors hover:opacity-80 p-2 rounded-full ${
-                  isScrolled || !isHomePage ? 'bg-primary/20 text-primary hover:bg-primary/30' : 'bg-white text-primary'
-                }`}
+              <button
+                key={i}
+                className={`transition-colors hover:opacity-80 p-2 rounded-full ${isScrolled || !isHomePage ? 'bg-primary/20 text-primary hover:bg-primary/30' : 'bg-white text-primary'
+                  }`}
                 title={action.label}
               >
                 {action.icon}
@@ -183,7 +279,7 @@ const Navbar = () => {
             ))}
           </div>
 
-          <button 
+          <button
             className="lg:hidden p-2 rounded-lg"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
@@ -198,41 +294,132 @@ const Navbar = () => {
 
       {/* Mobile Menu Overlay */}
       <div
-        className={`fixed inset-0 bg-primary/95 backdrop-blur-2xl z-[60] flex flex-col items-center justify-center p-6 transition-all duration-500 ${
-          isMobileMenuOpen ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'
-        } lg:hidden`}
+        className={`fixed inset-0 bg-primary/95 backdrop-blur-2xl z-[60] flex flex-col items-center justify-start pt-20 pb-6 px-6 transition-all duration-500 ${isMobileMenuOpen ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'
+          } lg:hidden`}
       >
-        <button 
+        <button
           className="absolute top-8 right-8 text-white p-2 hover:text-accent transition-colors"
           onClick={() => setIsMobileMenuOpen(false)}
         >
           <X className="w-8 h-8" />
         </button>
-        
-        <div className="w-full flex flex-col gap-4 overflow-y-auto max-h-[80vh] py-10 px-4">
+
+        <div className="w-full flex flex-col gap-4 overflow-y-auto max-h-[80vh] py-10 px-4 custom-scrollbar">
           {navLinks.map((link) => (
             <div key={link.name} className="w-full">
               <div className="relative inline-block w-full">
                 {renderNavLink(link, true)}
               </div>
-              
-              {link.dropdown && (
-                <div className="grid grid-cols-2 gap-3 mt-4 mb-6 bg-white/5 p-4 rounded-2xl">
-                  {link.dropdown.map((sub) => (
+
+              {/* Mobile Nested Categories Accordion */}
+              {link.isMegaMenu && isMobileProductsExpanded && (
+                <div className="flex flex-col gap-2 mt-4 mb-6 bg-white/5 p-4 rounded-2xl w-full text-left">
+                  <RouterLink
+                    to="/all-products"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="text-accent font-bold text-lg mb-2 text-center border-b border-white/10 pb-2"
+                  >
+                    View All Products
+                  </RouterLink>
+
+                  {categories.map((cat) => (
+                    <div key={cat.slug} className="mb-2">
+                      <button
+                        onClick={() => setExpandedMobileCategory(expandedMobileCategory === cat.slug ? null : cat.slug)}
+                        className="w-full flex items-center justify-between text-white font-semibold text-base py-2 px-3 rounded-lg hover:bg-white/10 transition-colors"
+                      >
+                        {cat.name}
+                        <ChevronDown className={`w-4 h-4 transition-transform ${expandedMobileCategory === cat.slug ? 'rotate-180 text-accent' : ''}`} />
+                      </button>
+
+                      {/* Subcategories Accordion */}
+                      {expandedMobileCategory === cat.slug && (
+                        <div className="ml-4 mt-2 border-l border-white/10 pl-4 flex flex-col gap-2">
+                          <RouterLink
+                            to={`/all-products?category=${cat.slug}`}
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            className="text-accent text-sm py-1 font-semibold"
+                          >
+                            All {cat.name}
+                          </RouterLink>
+
+                          {cat.subcategories?.map(subcat => (
+                            <div key={subcat.slug}>
+                              <button
+                                onClick={() => {
+                                  if (subcat.items?.length > 0) {
+                                    setExpandedMobileSubcategory(expandedMobileSubcategory === subcat.slug ? null : subcat.slug);
+                                  } else {
+                                    setIsMobileMenuOpen(false);
+                                    navigate(`/all-products?category=${cat.slug}&subcategory=${subcat.slug}`);
+                                  }
+                                }}
+                                className="w-full flex items-center justify-between text-gray-300 text-sm py-2 hover:text-white transition-colors text-left"
+                              >
+                                {subcat.name}
+                                {subcat.items?.length > 0 && (
+                                  <ChevronDown className={`w-3 h-3 transition-transform ${expandedMobileSubcategory === subcat.slug ? 'rotate-180 text-accent' : ''}`} />
+                                )}
+                              </button>
+
+                              {/* Items List */}
+                              {expandedMobileSubcategory === subcat.slug && subcat.items?.length > 0 && (
+                                <div className="ml-3 mt-1 flex flex-col gap-1 border-l border-white/5 pl-3">
+                                  <RouterLink
+                                    to={`/all-products?category=${cat.slug}&subcategory=${subcat.slug}`}
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                    className="text-accent text-xs py-1"
+                                  >
+                                    All {subcat.name}
+                                  </RouterLink>
+                                  {subcat.items.map(item => (
+                                    <RouterLink
+                                      key={item.slug}
+                                      to={`/all-products?category=${cat.slug}&subcategory=${subcat.slug}&item=${item.slug}`}
+                                      onClick={() => setIsMobileMenuOpen(false)}
+                                      className="text-gray-400 text-xs py-1.5 hover:text-white transition-colors"
+                                    >
+                                      {item.name}
+                                    </RouterLink>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Mobile Projects Accordion */}
+              {link.isProjectsMenu && isMobileProjectsExpanded && (
+                <div className="flex flex-col gap-2 mt-4 mb-6 bg-white/5 p-4 rounded-2xl w-full text-left">
+                  <RouterLink
+                    to="/projects"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="text-accent font-bold text-lg mb-2 text-center border-b border-white/10 pb-2"
+                  >
+                    View All Projects
+                  </RouterLink>
+
+                  {projectCategories.map((cat) => (
                     <RouterLink
-                      key={sub.name}
-                      to={sub.to}
+                      key={cat.slug}
+                      to={`/projects?category=${cat.slug}`}
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className="text-gray-300 text-sm py-2 hover:text-accent transition-colors border-b border-white/5"
+                      className="w-full flex items-center justify-between text-white font-semibold text-sm py-3 px-4 rounded-lg hover:bg-white/10 transition-colors"
                     >
-                      {sub.name}
+                      {cat.name}
+                      <ChevronRight className="w-4 h-4 text-accent" />
                     </RouterLink>
                   ))}
                 </div>
               )}
             </div>
           ))}
-          
+
           <div className="flex justify-center gap-6 mt-10 pt-10 border-t border-white/10">
             {actionIcons.map((action, i) => (
               <button key={i} className="text-white flex flex-col items-center gap-2 group">
@@ -245,9 +432,26 @@ const Navbar = () => {
           </div>
         </div>
       </div>
+
+      <style dangerouslySetInnerHTML={{
+        __html: `
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.05);
+          border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.2);
+          border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: rgba(255, 255, 255, 0.4);
+        }
+      `}} />
     </nav>
   );
 };
 
 export default Navbar;
-

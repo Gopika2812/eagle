@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronRight, Play, ChevronLeft } from 'lucide-react';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
 const Hero = () => {
@@ -203,68 +203,112 @@ const Hero = () => {
         ))}
       </div>
 
-      {/* Energy Sparks Animation */}
-      <EnergySparks />
+      {/* Side Electricity */}
+      <HeroSideElectricity />
     </section>
   );
 };
 
-const EnergySparks = () => {
-  const leftSparks = Array.from({ length: 15 });
-  const rightSparks = Array.from({ length: 15 });
+const HeroSideElectricity = () => {
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let animationFrameId;
+
+    const resizeCanvas = () => {
+      if (canvas.parentElement) {
+        canvas.width = canvas.parentElement.clientWidth;
+        canvas.height = canvas.parentElement.clientHeight;
+      }
+    };
+
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    class Arc {
+      constructor(side) {
+        this.side = side;
+        this.reset();
+      }
+
+      reset() {
+        this.x = this.side === 'left' ? 0 : canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.points = [{ x: this.x, y: this.y }];
+        this.width = 1.5 + Math.random() * 2;
+        this.life = 5 + Math.random() * 10;
+        this.maxLife = this.life;
+        this.finished = false;
+        this.jitter = 20 + Math.random() * 30;
+      }
+
+      update() {
+        this.life--;
+        if (this.life <= 0) {
+          this.finished = true;
+          return;
+        }
+
+        const lastPoint = this.points[this.points.length - 1];
+        const nextX = lastPoint.x + (this.side === 'left' ? 1 : -1) * Math.random() * this.jitter;
+        const nextY = lastPoint.y + (Math.random() - 0.5) * this.jitter;
+        
+        this.points.push({ x: nextX, y: nextY });
+        if (this.points.length > 8) this.points.shift();
+      }
+
+      draw() {
+        if (this.points.length < 2) return;
+        const opacity = this.life / this.maxLife;
+        ctx.save();
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = '#e21e26';
+        ctx.strokeStyle = `rgba(226, 30, 38, ${opacity})`;
+        ctx.lineWidth = this.width;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        
+        ctx.beginPath();
+        ctx.moveTo(this.points[0].x, this.points[0].y);
+        for (let i = 1; i < this.points.length; i++) ctx.lineTo(this.points[i].x, this.points[i].y);
+        ctx.stroke();
+
+        ctx.strokeStyle = `rgba(255, 255, 255, ${opacity * 0.8})`;
+        ctx.lineWidth = this.width / 2.5;
+        ctx.stroke();
+        ctx.restore();
+      }
+    }
+
+    const arcs = [];
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (Math.random() < 0.4) arcs.push(new Arc(Math.random() < 0.5 ? 'left' : 'right'));
+
+      for (let i = arcs.length - 1; i >= 0; i--) {
+        arcs[i].update();
+        arcs[i].draw();
+        if (arcs[i].finished) arcs.splice(i, 1);
+      }
+      animationFrameId = requestAnimationFrame(animate);
+    };
+
+    animate();
+    return () => {
+      window.removeEventListener('resize', resizeCanvas);
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, []);
 
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
-      {/* Left Side Sparks */}
-      {leftSparks.map((_, i) => (
-        <motion.div
-          key={`left-${i}`}
-          initial={{ 
-            x: -100, 
-            y: Math.random() * 100 + "%", 
-            opacity: 0,
-            scale: Math.random() * 0.5 + 0.5 
-          }}
-          animate={{ 
-            x: Math.random() * 40 + "vw", 
-            opacity: [0, 0.8, 0],
-            scale: [1, 1.5, 1]
-          }}
-          transition={{ 
-            duration: Math.random() * 3 + 2, 
-            repeat: Infinity, 
-            delay: Math.random() * 5,
-            ease: "linear"
-          }}
-          className="absolute w-1 h-1 bg-accent rounded-full shadow-[0_0_10px_#e21e26]"
-        />
-      ))}
-
-      {/* Right Side Sparks */}
-      {rightSparks.map((_, i) => (
-        <motion.div
-          key={`right-${i}`}
-          initial={{ 
-            x: "110vw", 
-            y: Math.random() * 100 + "%", 
-            opacity: 0,
-            scale: Math.random() * 0.5 + 0.5 
-          }}
-          animate={{ 
-            x: 60 + Math.random() * 40 + "vw", 
-            opacity: [0, 0.8, 0],
-            scale: [1, 1.5, 1]
-          }}
-          transition={{ 
-            duration: Math.random() * 3 + 2, 
-            repeat: Infinity, 
-            delay: Math.random() * 5,
-            ease: "linear"
-          }}
-          className="absolute w-1 h-1 bg-accent rounded-full shadow-[0_0_10px_#e21e26]"
-        />
-      ))}
-    </div>
+    <canvas
+      ref={canvasRef}
+      className="absolute inset-0 pointer-events-none z-10"
+      style={{ opacity: 0.8 }}
+    />
   );
 };
 

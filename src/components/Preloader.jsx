@@ -55,7 +55,7 @@ const Preloader = ({ onComplete }) => {
             <motion.span
               key={index}
               variants={letterVars}
-              className={`text-2xl sm:text-4xl md:text-5xl lg:text-7xl font-black text-primary tracking-tighter ${char === " " ? "w-4 md:w-8" : ""}`}
+              className={`text-xl sm:text-4xl md:text-5xl lg:text-7xl font-black text-primary tracking-tighter ${char === " " ? "w-2 md:w-8" : ""}`}
               style={{ fontFamily: "'Cinzel', serif" }}
             >
               {char === " " ? "\u00A0" : char}

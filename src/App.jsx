@@ -9,6 +9,7 @@ import Footer from './components/Footer'
 import Preloader from './components/Preloader'
 import { AnimatePresence } from 'framer-motion'
 import ScrollToTop from './components/ScrollToTop'
+import ScrollSparks from './components/ScrollSparks'
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -23,6 +24,7 @@ function App() {
         
         {!loading && (
           <>
+            <ScrollSparks />
             <Navbar />
             <Routes>
               <Route path="/" element={<Home />} />

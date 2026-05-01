@@ -203,8 +203,68 @@ const Hero = () => {
         ))}
       </div>
 
-      {/* Scroll indicator - Removed since we have slider indicators in that area now, or moved it */}
+      {/* Energy Sparks Animation */}
+      <EnergySparks />
     </section>
+  );
+};
+
+const EnergySparks = () => {
+  const leftSparks = Array.from({ length: 15 });
+  const rightSparks = Array.from({ length: 15 });
+
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+      {/* Left Side Sparks */}
+      {leftSparks.map((_, i) => (
+        <motion.div
+          key={`left-${i}`}
+          initial={{ 
+            x: -100, 
+            y: Math.random() * 100 + "%", 
+            opacity: 0,
+            scale: Math.random() * 0.5 + 0.5 
+          }}
+          animate={{ 
+            x: Math.random() * 40 + "vw", 
+            opacity: [0, 0.8, 0],
+            scale: [1, 1.5, 1]
+          }}
+          transition={{ 
+            duration: Math.random() * 3 + 2, 
+            repeat: Infinity, 
+            delay: Math.random() * 5,
+            ease: "linear"
+          }}
+          className="absolute w-1 h-1 bg-accent rounded-full shadow-[0_0_10px_#e21e26]"
+        />
+      ))}
+
+      {/* Right Side Sparks */}
+      {rightSparks.map((_, i) => (
+        <motion.div
+          key={`right-${i}`}
+          initial={{ 
+            x: "110vw", 
+            y: Math.random() * 100 + "%", 
+            opacity: 0,
+            scale: Math.random() * 0.5 + 0.5 
+          }}
+          animate={{ 
+            x: 60 + Math.random() * 40 + "vw", 
+            opacity: [0, 0.8, 0],
+            scale: [1, 1.5, 1]
+          }}
+          transition={{ 
+            duration: Math.random() * 3 + 2, 
+            repeat: Infinity, 
+            delay: Math.random() * 5,
+            ease: "linear"
+          }}
+          className="absolute w-1 h-1 bg-accent rounded-full shadow-[0_0_10px_#e21e26]"
+        />
+      ))}
+    </div>
   );
 };
 

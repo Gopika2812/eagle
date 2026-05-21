@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Star, ArrowLeft, Filter, X, ChevronDown, ChevronRight, ShoppingBag, Heart, Minus, Plus } from 'lucide-react';
+import { Star, ArrowLeft, Filter, X, ChevronDown, ChevronRight, ShoppingBag, Heart, Minus, Plus, Search, Package } from 'lucide-react';
 import { products } from '../data/products';
 import { categories } from '../data/categories';
 
@@ -9,6 +9,7 @@ const ProductPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   const [qty, setQty] = useState({});
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Expanded states for the sidebar accordion
   const [expandedCategories, setExpandedCategories] = useState({});
@@ -66,8 +67,20 @@ const ProductPage = () => {
     setIsMobileFilterOpen(false); // Close mobile drawer on selection
   };
 
-  // Filter products based on selected parameters
+  // Filter products based on selected parameters and search query
   const filteredProducts = products.filter(p => {
+    // Search filter
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase().trim();
+      const matchesSearch = 
+        p.name.toLowerCase().includes(query) ||
+        p.category.toLowerCase().includes(query) ||
+        p.subcategory?.toLowerCase().includes(query) ||
+        p.item?.toLowerCase().includes(query) ||
+        p.description?.toLowerCase().includes(query);
+      if (!matchesSearch) return false;
+    }
+
     // If no category is selected, show all
     if (!selectedCategory) return true;
     
@@ -111,17 +124,35 @@ const ProductPage = () => {
     );
   };
 
+  const handleShowAll = () => {
+    setSearchParams(new URLSearchParams());
+    setSearchQuery('');
+  };
+
   const SidebarContent = () => (
     <div className="w-full">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-bold text-primary">Filters</h2>
         <button 
-          onClick={() => setSearchParams(new URLSearchParams())}
+          onClick={handleShowAll}
           className="text-sm text-accent hover:underline"
         >
           Clear All
         </button>
       </div>
+
+      {/* Show All Products Button */}
+      <button
+        onClick={handleShowAll}
+        className={`w-full flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold mb-4 transition-all duration-200 ${
+          !selectedCategory && !selectedSubcategory && !selectedItem && !searchQuery.trim()
+            ? 'bg-accent text-white shadow-md shadow-accent/20'
+            : 'bg-gray-50 text-primary hover:bg-accent/10 hover:text-accent border border-gray-200'
+        }`}
+      >
+        <Package className="w-4 h-4" />
+        Show All Products
+      </button>
 
       <div className="space-y-4">
         {categories.map(cat => (
@@ -249,6 +280,28 @@ const ProductPage = () => {
               <Filter className="w-4 h-4" />
               Filters
             </button>
+          </div>
+        </div>
+
+        {/* Global Search Bar */}
+        <div className="mb-8">
+          <div className="relative max-w-2xl">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Search products by name, category, brand..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-12 pr-10 py-3 bg-white border border-gray-200 rounded-xl text-sm text-primary placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent shadow-sm transition-all"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-accent transition-colors"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
           </div>
         </div>
 

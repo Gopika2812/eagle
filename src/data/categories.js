@@ -67,6 +67,11 @@ export const categories = [
         name: "SOLIS",
         slug: "solis",
         items: []
+      },
+      {
+        name: "AMAZE",
+        slug: "amaze",
+        items: []
       }
     ]
   },

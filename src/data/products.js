@@ -165,7 +165,7 @@ export const products = [
     originalPrice: 48000,
     rating: 4.6,
     reviews: 45,
-    image: "/products/poly-cab-on-grid-inverter.jpg",
+    image: "/products/poly_cab.webp",
     inStock: true,
     description: "Efficient on-grid inverter from Poly Lab."
   },
@@ -263,6 +263,21 @@ export const products = [
     inStock: true,
     description: "Solis dependable solar storage battery."
   },
+  {
+    id: 31,
+    name: "AMAZE SOLAR BATTERY",
+    category: "SOLAR BATTERY",
+    subcategory: "AMAZE",
+    item: "",
+    slug: "amaze-solar-battery",
+    price: 98000,
+    originalPrice: 115000,
+    rating: 5.0,
+    reviews: 150,
+    image: "/products/amaze_inverter_battery.webp",
+    inStock: true,
+    description: "Premium Amaze solar storage battery with superior performance."
+  },
 
   // --- SOLAR WATER PUMP ---
   {
@@ -357,7 +372,7 @@ export const products = [
     originalPrice: 22000,
     rating: 4.6,
     reviews: 140,
-    image: "/products/amaze-home-inverter.webp",
+    image: "/products/amaze_inverter_battery.jpg",
     inStock: true,
     description: "Amaze home backup inverter and battery system."
   },
@@ -417,7 +432,7 @@ export const products = [
     originalPrice: 26000,
     rating: 4.7,
     reviews: 110,
-    image: "/products/tata-home-inverter.webp",
+    image: "/products/tata_home_inv_battery.jpg",
     inStock: true,
     description: "Premium Tata home inverter and battery."
   },
@@ -452,5 +467,5 @@ export const products = [
     image: "/products/servo-stabilizer-ups.webp",
     inStock: true,
     description: "Servo voltage stabilizer and UPS."
-  }
+  },
 ];

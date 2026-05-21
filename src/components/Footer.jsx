@@ -98,7 +98,15 @@ const Footer = () => {
 
         <div className="border-t border-white/5 pt-10 flex flex-col md:flex-row justify-between items-center gap-6">
           <p className="text-gray-500 text-sm">
-            © {currentYear} Eagle Envitech. All rights reserved. Designed with <span className="text-accent">♥</span> for the Planet.
+            © {currentYear} Eagle Envitech. All rights reserved. Designed by{' '}
+            <a 
+              href="https://higaiautomation.com/" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="text-accent hover:underline transition-all font-semibold"
+            >
+              HIGAI AUTOMATION LLP
+            </a>
           </p>
           <div className="flex gap-8 text-sm text-gray-500">
             <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>

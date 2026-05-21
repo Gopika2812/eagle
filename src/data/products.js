@@ -235,9 +235,9 @@ export const products = [
   },
   {
     id: 16,
-    name: "VS SOLE SOLAR BATTERY",
+    name: "VSOLE SOLAR BATTERY",
     category: "SOLAR BATTERY",
-    subcategory: "VS SOLE",
+    subcategory: "LITHIUM BATTERY",
     item: "",
     slug: "vs-sole-solar-battery",
     price: 95000,
